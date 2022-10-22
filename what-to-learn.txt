@@ -1,0 +1,58 @@
+criar e configurar cluster Redshift
+
+criar regra de entrada para o cluster Redshift 
+	- EC2 > security group > ações/editar regras de entrada
+		- Adicionar Regra : Todo o tráfego 
+		(somente para esse estudo! o seguro é fazer regra para o ip especifico do dbt)
+
+criar um DB e tables
+criar S3 bucket e carregar os dados
+criar credenciais de acesso Redshift <> S3
+fazer a carga dos dados para o Redshift
+acessar e configurar o dbt
+conectar dbt cloud com github repo
+criar yml de config de source
+aplicar transformações pelo dbt nos dados pelas regras de negócio informadas
+particionamento de BD
+committar, criar PR e fazer o merge dos modelos com integração com github
+fazer o deploy dos modelos rodando o pipeline em prod
+Materializations
+Elaborar testes nos pipelines
+Hooks
+Packages : criar o proprio ou pegar existente em vhttps://hub.getdbt.com/
+	- Criar e configurar arquivo de config yml dos pacotes
+	- comando 'dbt deps' para instalar os pacotes listados no yml
+
+Loggins via package e alteração do yml do projeto para modelo genérico de post e pre hooks
+	- no yml principal do projeto, adicionar em 'models:' :
+		pre-hook: "{{logging.log_model_start_event()}}"
+  		post-hook: "{{logging.log_model_end_event()}}"
+	- Com isso, ao rodar um modelo vai ter uma parte de 'details' com os loggings.
+	- No redshift, vai criar um schema com msm nome do schema onde está rodando + sufixo '_meta', onde
+	terá uma tabela 'dbt_audit_log' com os logs de eventos da execução
+
+Criar modelo no dbt para investigar a table 'dbt_audit_log'
+
+Variáveis 
+	- substituídas a medida que o pipeline vai sendo executado
+	- Criar no arquivo de configuração yml padrão do projeto
+		- ex: 
+			vars:
+  			  category: Seafood
+	- Na definição, pode atribuir um valor para ela (como acima) ou em tempo de execução.
+	- ex de uso : filtragem dinâmica
+
+Criar e usar Seeds
+	- Se há infos que você precisa para o seu pipeline e ela não está no source, ela pode ser add no seu pipeline
+	como arquivo CSV.
+
+Documentação Automática
+	- comando 'dbt docs generate' , mas o projeto não pode ter erro
+
+Macros
+	- blocos de código que podem ser podem ser executados em qualquer parte do pipeline, em
+	qualquer modelo (CÓDIGO REUTILIZÁVEL). Ficam na pasta padrao 'macro' e são arquvos .sql
+	- Dentro de um arquivo macro podemos ter várias macros, cada uma com um nome.
+	- diferente dos modelos q são chamados pelo nome do arquivo, elas são chamadas pelos seus nomes
+	- exemplo de uso: criar macro para retornar colunas recorrentes no select.
+	- while, for, if etc.

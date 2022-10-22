@@ -18,7 +18,7 @@ WITH prod AS (
 		,od.order_id
 		,od.quantity
 		,od.discount
-	FROM {{ref('orderdetails') }} od /*ref a uma view criada anteriormente*/
+	FROM {{ref('orderdetails') }} od --ref a uma view criada anteriormente
 	LEFT JOIN prod pd
 		ON (od.product_id = pd.product_id)
 	)
@@ -54,6 +54,6 @@ WITH prod AS (
 		)
 SELECT * FROM finaljoin
 
-/*conferindo : finaljoin tem q ter o msm numero de order_details*/
-/*select count(*) from finaljoin*/
-/*select count(*) from order_details*/
+--conferindo : finaljoin tem q ter o msm numero de order_details
+--select count(*) from finaljoin*/
+--select count(*) from order_details*/

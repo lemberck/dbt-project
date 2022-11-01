@@ -1,4 +1,5 @@
-/* Hooks
+{# 
+Hooks
 pre-hook : executado antes do modelo ser criado. Ex: Lock de tabela (Impede que a tabela seja usada enquando está sendo feita uma alteração nela.)
 post-hook : executado depois do modelo ser criado. Ex: limitar o acesso a certas tabelas para um grupo específico (permissões)
 on-run-start : executado antes de executar o pipeline
@@ -22,7 +23,8 @@ alter group biusers add user usertest;
     - Dar GRAND SELECT ON TABLE para o grupo (permissão de leitura)
 
 3- criar o select da tabela pedida no dbt
-*/
+#}
+
 {{
     config(
         materialized='table',
@@ -30,14 +32,14 @@ alter group biusers add user usertest;
             GRANT USAGE ON SCHEMA {{target.schema}} TO GROUP biusers;
             GRANT SELECT ON TABLE {{target.schema}}.bireport TO GROUP biusers;
         "]
-
     )
 
 }}
 
 select * from {{ref('joins')}}
 
-/* Exemplo com lock em prehook e entao permissão com posthook (commit libera o lock)
+{#
+Exemplo com lock em prehook e entao permissão com posthook (commit libera o lock)
 {{
     config(
         materialized='table',
@@ -55,4 +57,4 @@ select * from {{ref('joins')}}
     )
 
 }}
-*/
+#}
